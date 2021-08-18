@@ -83,7 +83,7 @@ for event in longpoll.listen():
                         search_photo = []
                         for photos in photo_response['items']:
                             add_photo = {}
-                            likomments = (photos['likes']['count'] + 1) * (photos['comments']['count'] + 1)
+                            likomments = (photos['likes']['count'] + photos['comments']['count'])
                             for photos_sizes in photos['sizes']:
                                 if photos_sizes['type'] == 'p':
                                     # pprint(photos)
@@ -108,4 +108,4 @@ for event in longpoll.listen():
                                 attach += 'photo' + str(mem['id']) + '_' + str(photo['photo_id']) + ','
                             write_msg(event.user_id, mem['first_name'] + ' ' + str(member['age']) + ' лет\n'
                                       + member['url'], attach)
-                            members.append(member)добавил
+                            members.append(member)
