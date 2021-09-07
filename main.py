@@ -65,14 +65,14 @@ class User:
         if 'country' in response:
             self.country = response['country']['id']
         else:
-            self.country = ''
+            self.country = 1
         if not self.check_self_in_db():
             if 'city' in response:
                 self.city = response['city']['id']
                 self.city_title = response['city']['title']
             else:
-                self.city = 0
-                self.city_title = ''
+                self.city = 1
+                self.city_title = 'Москва'
 
             self.sex = response['sex']
             self.find_age_from = self.age - delta_years
@@ -86,7 +86,8 @@ class User:
             cursor.execute("INSERT INTO user VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)", params)
             conn.commit()
             write_msg(event.user_id,
-                      f'Привет, {self.name}\n Будем искать для тебя {self.sex_text[self.find_sex()]} от {self.find_age_from} '
+                      f'Привет, {self.name}\n Будем искать для тебя {self.sex_text[self.find_sex()]} '
+                      f'в активном поиске от {self.find_age_from} '
                       f'до {self.find_age_to} лет\n из города {self.city_title}. Показываю по {self.count_mem} анкеты за раз\n '
                       f'Если хочешь изменить какой-то параметр поиска,\n напиши ключевое слово'
                       f' "пол", "город", "от", "до" или "анкеты"\n Если всё ОК, напиши любое слово кроме ключевого',
@@ -300,9 +301,10 @@ for event in long_poll.listen():
                     cursor.execute(sql_update_query, params)
                     conn.commit()
                     write_msg(event.user_id,
-                              f'Напоминаю. Ищем {user.sex_text[user.find_sex()]} от {user.find_age_from} '
-                              f'до {user.find_age_to} лет\n из города {user.city_title}. Показываю по {user.count_mem}'
-                              f' анкеты за раз\n '
+                              f'Напоминаю. Ищем {user.sex_text[user.find_sex()]} '
+                              f'в активном поиске от {user.find_age_from} '
+                              f'до {user.find_age_to} лет\n из города {user.city_title}.'
+                              f' Показываю по {user.count_mem} анкеты за раз\n '
                               f'Если хочешь изменить какой-то параметр поиска,\n напиши ключевое слово'
                               f' "пол", "город", "от", "до" или "анкеты"\n Если продолжаем с этими же '
                               f'параметрами, напиши любое слово кроме ключевого',
